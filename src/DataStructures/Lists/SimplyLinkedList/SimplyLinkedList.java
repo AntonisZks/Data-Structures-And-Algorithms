@@ -6,7 +6,7 @@ package DataStructures.Lists.SimplyLinkedList;
  * A class that represents a simply linked list data structure
  * @author Antonis Zikas
  */
-public class SimplyLinkedList<list_t>
+public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
 {
     private static final String DEFAULT_SEPERATOR = " -> "; // Default seperator character for the data printing
 
@@ -26,10 +26,11 @@ public class SimplyLinkedList<list_t>
      * Inserts data to the end of the simply linked list
      * @param data the data to be inserted
      */
+    @Override
     public void insertDataAtEnd(list_t data)
     {
         // Creating a new simply linked list node
-        ListNode<list_t> newNode = new ListNode<list_t>(data, null);     
+        ListNode<list_t> newNode = new ListNode<>(data, null);
         
         // Checking if the list is empty, If so add the new node and update the size of the list
         if (this.head == null) {
@@ -44,14 +45,13 @@ public class SimplyLinkedList<list_t>
         }
         // Set the last node of the list and update its size
         currentNode.setNextNode(newNode); this.size++;
-
-        return;
     }
 
     /**
      * Advanced printing of the simply linked list's sequence of data
      * @param seperator a character seperator for the data printing
      */
+    @Override
     public void print(String seperator)
     {
         System.out.print("[");
@@ -77,6 +77,7 @@ public class SimplyLinkedList<list_t>
     /**
      * Default printing of the simply linked list's sequence of data
      */
+    @Override
     public void print() {
         this.print(SimplyLinkedList.DEFAULT_SEPERATOR);
     }
