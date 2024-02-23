@@ -1,3 +1,5 @@
+/* Filename: SimplyLinkedListMethods.java */
+
 package DataStructures.Lists.SimplyLinkedList;
 
 /**
@@ -5,7 +7,17 @@ package DataStructures.Lists.SimplyLinkedList;
  */
 public interface SimplyLinkedListMethods<list_t>
 {
-    void insertDataAtEnd(list_t data);
+    /* Inserting Methods */
+    boolean insertDataAtEnd(list_t data);
+    boolean insertDataAtStart(list_t data);
+    boolean insertDataAtIndex(list_t data, int index);
+
+    /* Removing Methods */
+    list_t removeDataFromEnd();
+    list_t removeDataFromStart();
+    list_t removeDataFromIndex(int index);
+
+    /* Printing Methods */
     void print(String seperator);
     void print();
 }
