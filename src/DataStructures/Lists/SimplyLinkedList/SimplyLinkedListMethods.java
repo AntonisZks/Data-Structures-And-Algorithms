@@ -17,6 +17,10 @@ public interface SimplyLinkedListMethods<list_t>
     list_t removeDataFromStart();
     list_t removeDataFromIndex(int index);
 
+    /* Other Methods */
+    boolean contains(list_t data);
+    int indexOf(list_t data);
+
     /* Printing Methods */
     void print(String seperator);
     void print();

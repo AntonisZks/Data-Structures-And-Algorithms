@@ -1,25 +1,16 @@
-import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
+import java.util.ArrayList;
+
 
 public class Test1
 {
     public static void main(String[] args)
     {
-        SimplyLinkedList<Integer> myList = new SimplyLinkedList<>();
+        ArrayList<Integer> arrayList = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++) {
-            if (!myList.insertDataAtIndex(i + 1, i)) {
-                System.err.println("Error on inserting!");
-                break;
-            }
+        for (int i = 0; i < 10; i++) {
+            arrayList.add(i + 1);
         }
-
-        myList.print(", ");
-
-        Integer data = myList.removeDataFromIndex(0);
-        if (data == null) {
-            System.out.println("No data existing!");
-        }
-
-        myList.print(", ");
+        
+        System.out.println(arrayList);
     }
 }

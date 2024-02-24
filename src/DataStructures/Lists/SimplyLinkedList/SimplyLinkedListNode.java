@@ -4,17 +4,17 @@ package DataStructures.Lists.SimplyLinkedList;
  * A class that represents a simply linked list node.
  * @author Antonis Zikas
  */
-public class ListNode <node_t>
+class SimplyLinkedListNode <node_t>
 {
     private node_t data;
-    private ListNode<node_t> nextNode;
+    private SimplyLinkedListNode<node_t> nextNode;
     
     /**
      * Constructor of the simply linked list node
      * @param data the data of the node
      * @param nextNode the next node in the sequence
      */
-    public ListNode(node_t data, ListNode<node_t> nextNode) {
+    public SimplyLinkedListNode(node_t data, SimplyLinkedListNode<node_t> nextNode) {
         this.data = data;
         this.nextNode = nextNode;
     }
@@ -31,7 +31,7 @@ public class ListNode <node_t>
      * Sets the next node of the current one
      * @param nextNode the next node in the sequence
      */
-    public void setNextNode(ListNode<node_t> nextNode) {
+    public void setNextNode(SimplyLinkedListNode<node_t> nextNode) {
         this.nextNode = nextNode;
     }
 
@@ -47,7 +47,7 @@ public class ListNode <node_t>
      * Returns the next node of the current one
      * @return the next node in the sequence
      */
-    public ListNode<node_t> getNextNode() {
+    public SimplyLinkedListNode<node_t> getNextNode() {
         return this.nextNode;
     }
 

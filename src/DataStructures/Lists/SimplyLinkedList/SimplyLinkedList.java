@@ -2,16 +2,22 @@
 
 package DataStructures.Lists.SimplyLinkedList;
 
+import java.util.Iterator;
+
 /**
  * A class that represents a simply linked list data structure
  * @author Antonis Zikas
+ * @since 24/02/2024
  */
-public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
+public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>, Iterable<list_t>
 {
+    // TODO: Implement replace methods.
+    // TODO: Implement other methods like getSize(), etc.
+
     private static final String DEFAULT_SEPERATOR = " -> "; // Default seperator character for the data printing
 
     // Data of the simply linked list
-    private ListNode<list_t> head;
+    private SimplyLinkedListNode<list_t> head;
     private int size;
 
     /**
@@ -27,19 +33,18 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * @param data the data to be inserted
      */
     @Override
-    public boolean insertDataAtEnd(list_t data)
+    public final boolean insertDataAtEnd(list_t data)
     {
         // Creating a new simply linked list node
-        ListNode<list_t> newNode = new ListNode<>(data, null);
-        
+        SimplyLinkedListNode<list_t> newNode = new SimplyLinkedListNode<>(data, null);
+
         // Checking if the list is empty. If so add the new node and update the size of the list
         if (this.head == null) {
-            this.head = newNode; 
-            this.size++;
+            this.head = newNode; this.size++;
             return true;
-        } 
+        }
         // Initialize a current node and loop until the very end of the list
-        ListNode<list_t> currentNode = this.head;
+        SimplyLinkedListNode<list_t> currentNode = this.head;
 
         while (currentNode.getNextNode() != null) {
             currentNode = currentNode.getNextNode();
@@ -55,19 +60,18 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * @param data the data to be inserted
      */
     @Override
-    public boolean insertDataAtStart(list_t data)
+    public final boolean insertDataAtStart(list_t data)
     {
         // Creating a new simply linked list node
-        ListNode<list_t> newNode = new ListNode<>(data, null);
+        SimplyLinkedListNode<list_t> newNode = new SimplyLinkedListNode<>(data, null);
 
         // Checking if the list is empty. If so add the new node and update the size of the list
         if (this.head == null) {
-            this.head = newNode; 
-            this.size++;
+            this.head = newNode; this.size++;
             return true;
         }
         // Get the first node of the list and insert the new node before that
-        ListNode<list_t> firstNode = this.head;
+        SimplyLinkedListNode<list_t> firstNode = this.head;
         this.head = newNode;
         newNode.setNextNode(firstNode);
         this.size++;
@@ -81,18 +85,18 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * @param index the index in witch the data is going to be inserted
      */
     @Override
-    public boolean insertDataAtIndex(list_t data, int index)
+    public final boolean insertDataAtIndex(list_t data, int index)
     {
         // Creating a new simply linked list node
-        ListNode<list_t> newNode = new ListNode<>(data, null);
+        SimplyLinkedListNode<list_t> newNode = new SimplyLinkedListNode<>(data, null);
 
         // Checking if the given index is equal to the size of the list, or zero and do the appropriates
-        if (index == this.size) { 
-            return this.insertDataAtEnd(data); 
+        if (index == this.size) {
+            return this.insertDataAtEnd(data);
         }
-        else if (index == 0) { 
-            return this.insertDataAtStart(data); 
-        } 
+        else if (index == 0) {
+            return this.insertDataAtStart(data);
+        }
 
         // Checking if the given index is valid according to the list size
         if (index < 0 || index > this.size - 1) {
@@ -100,14 +104,14 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
             return false;
         }
         // Otherwise insert the data to the given index inside the list
-        ListNode<list_t> currentNode = this.head;
+        SimplyLinkedListNode<list_t> currentNode = this.head;
 
         for (int i = 0; i < index - 1; i++) {
             currentNode = currentNode.getNextNode();
         }
-        
+
         // Store the next node in the sequence and store the new node between the current and the next ones
-        ListNode<list_t> nextNode = currentNode.getNextNode();
+        SimplyLinkedListNode<list_t> nextNode = currentNode.getNextNode();
         currentNode.setNextNode(newNode);
         newNode.setNextNode(nextNode);
 
@@ -118,7 +122,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * Removes and returns the data at the end of the simply linked list
      */
     @Override
-    public list_t removeDataFromEnd()
+    public final list_t removeDataFromEnd()
     {
         // Checking if the list is empty. If so return null
         if (this.head == null) {
@@ -134,14 +138,14 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         }
 
         // Otherwise head over to the last node and delete its data and return it
-        ListNode<list_t> currentNode = this.head;
-        ListNode<list_t> previousNode = this.head;
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+        SimplyLinkedListNode<list_t> previousNode = this.head;
 
         while (currentNode.getNextNode() != null) {
             previousNode = currentNode;
             currentNode = currentNode.getNextNode();
         }
-        
+
         // Keep the removed data and delete the last node
         list_t removedData = currentNode.getData();
         previousNode.setNextNode(null); this.size--;
@@ -150,10 +154,10 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     }
 
     /**
-     * Removes the data from the beginning of the simply linked list
+     * Removes and returns the data from the beginning of the simply linked list
      */
     @Override
-    public list_t removeDataFromStart()
+    public final list_t removeDataFromStart()
     {
         // Checking if the list is empty. If so return null
         if (this.head == null) {
@@ -169,15 +173,19 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         }
 
         // Otherwise store the second node in the sequence and remove the first node
-        ListNode<list_t> secondNode = this.head.getNextNode();
+        SimplyLinkedListNode<list_t> secondNode = this.head.getNextNode();
         list_t removedData = this.head.getData();
         this.head = secondNode; this.size--;
 
         return removedData;
     }
 
+    /**
+     * Removes and returns the data at the given index inside the simply linked list
+     * @param index the index from which the data will be removed
+     */
     @Override
-    public list_t removeDataFromIndex(int index)
+    public final list_t removeDataFromIndex(int index)
     {
         // Checking if the list is empty. If so return null
         if (this.head == null) {
@@ -185,11 +193,11 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         }
 
         // Checking if the given index is equal to the size of the list, or zero and do the appropriates
-        if (index == this.size - 1) { 
-            return this.removeDataFromEnd(); 
+        if (index == this.size - 1) {
+            return this.removeDataFromEnd();
         }
-        else if (index == 0) { 
-            return this.removeDataFromStart(); 
+        else if (index == 0) {
+            return this.removeDataFromStart();
         }
 
         // Checking if the given index is valid according to the list size
@@ -199,8 +207,8 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         }
 
         // Otherwise head to the node at the given index, store its data and delete it
-        ListNode<list_t> currentNode = this.head;
-        ListNode<list_t> previousNode = this.head;
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+        SimplyLinkedListNode<list_t> previousNode = this.head;
 
         for (int i = 0; i < index; i++) {
             previousNode = currentNode;
@@ -215,24 +223,49 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     }
 
     /**
+     * Overloading method for printing the simply linked list object
+     * @return the list as a string
+     */
+    @Override
+    public final String toString()
+    {
+        // Create a result string variable
+        String response = "[";
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+
+        // Loop through every node in the list and store its data to the result string
+        while (currentNode != null)
+        {
+            response = response.concat(currentNode.getData().toString());
+            if (currentNode.getNextNode() != null) {
+                response += SimplyLinkedList.DEFAULT_SEPERATOR;
+            }
+            currentNode = currentNode.getNextNode();
+        }
+        response += "]";
+
+        return response;
+    }
+
+    /**
      * Advanced printing of the simply linked list's sequence of data
      * @param seperator a character seperator for the data printing
      */
     @Override
-    public void print(String seperator)
+    public final void print(String seperator)
     {
         System.out.print("[");
 
         // Checking if the list is empty
         if (this.head == null) { System.out.println("]"); return; }
 
-        ListNode<list_t> currentNode = this.head;
+        SimplyLinkedListNode<list_t> currentNode = this.head;
 
         // Loop through every node in the list and print its content
         while (currentNode != null) 
         {
             System.out.print(currentNode.getData());
-            if (currentNode.getNextNode() != null) { // Printing a seperator character if necessary
+            if (currentNode.getNextNode() == null) { // Printing a seperator character if necessary
                 System.out.print(seperator); 
             }
 
@@ -245,7 +278,95 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * Default printing of the simply linked list's sequence of data
      */
     @Override
-    public void print() {
+    public final void print() {
         this.print(SimplyLinkedList.DEFAULT_SEPERATOR);
+    }
+
+    /**
+     * Searches for the give data in the list
+     * @return true is data found, false if data not found
+     */
+    @Override
+    public boolean contains(list_t data)
+    {
+        // Initialize a current node
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+
+        // Search for the given data in the list and if found return true
+        while (currentNode != null) {
+            if (currentNode.getData() == data) {
+                return true;
+            }
+            currentNode = currentNode.getNextNode();
+        }
+        return false; // Otherwise, no data found
+    }
+
+    /**
+     * Returns the index of the given data in the list, if exist
+     * @return the index of the data in the list, -1 if not exist
+     */
+    @Override
+    public int indexOf(list_t data)
+    {
+        // Initialize a current node and a counter variable
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+        int indexCounter = 0;
+
+        // Search for the given data in the list and if found return its index
+        while (currentNode != null) {
+            if (currentNode.getData() == data) {
+                return indexCounter;
+            }
+            currentNode = currentNode.getNextNode();
+            indexCounter++;
+        }
+        return -1; // Otherwise return -1 indicating that the data was not found in the list
+    }
+
+    /**
+     * Iterable method to iterate the list using 'foreach' loop
+     * @return an iterator object
+     */
+    @Override
+    public Iterator<list_t> iterator()
+    {
+        // Construct a new iterator object and return it
+        return new Iterator<list_t>() 
+        {
+            private SimplyLinkedListNode<list_t> currentNode = head;
+
+            @Override
+            public boolean hasNext() {
+                return currentNode != null; // Determine whether there is a next node in the sequence
+            }
+
+            @Override
+            public list_t next() 
+            {
+                // Return the data of the current node, and set it to the next one
+                list_t dataToReturn = currentNode.getData();
+                currentNode = currentNode.getNextNode();
+                
+                return dataToReturn;
+            }
+        };
+    }
+
+    /**
+     * Main function to test the Simply linked list class and its functionality
+     * @param args some arguments for command line executions
+     * @author Antonis Zikas
+     */
+    public static void main(String[] args) {
+        SimplyLinkedList<Integer> list = new SimplyLinkedList<>();
+
+        for (int i = 0; i < 20; i++) {
+            list.insertDataAtEnd(i + 1);
+        }
+
+        for (Integer item : list) {
+            System.out.print(item + ", ");
+        }
     }
 }
