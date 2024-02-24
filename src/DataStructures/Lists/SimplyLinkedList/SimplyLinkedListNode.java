@@ -4,7 +4,7 @@ package DataStructures.Lists.SimplyLinkedList;
  * A class that represents a simply linked list node.
  * @author Antonis Zikas
  */
-class SimplyLinkedListNode <node_t>
+public class SimplyLinkedListNode <node_t>
 {
     private node_t data;
     private SimplyLinkedListNode<node_t> nextNode;

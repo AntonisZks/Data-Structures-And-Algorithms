@@ -4,6 +4,7 @@ package DataStructures.Lists.SimplyLinkedList;
 
 /**
  * Public Interface for the simply linked list's methods
+ * @author Antonis Zikas
  */
 public interface SimplyLinkedListMethods<list_t>
 {

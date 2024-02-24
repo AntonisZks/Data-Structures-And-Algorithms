@@ -17,8 +17,8 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     private static final String DEFAULT_SEPERATOR = " -> "; // Default seperator character for the data printing
 
     // Data of the simply linked list
-    private SimplyLinkedListNode<list_t> head;
-    private int size;
+    protected SimplyLinkedListNode<list_t> head;
+    protected int size;
 
     /**
      * Constructor of the singly linked list
@@ -43,6 +43,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
             this.head = newNode; this.size++;
             return true;
         }
+
         // Initialize a current node and loop until the very end of the list
         SimplyLinkedListNode<list_t> currentNode = this.head;
 
@@ -230,21 +231,21 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     public final String toString()
     {
         // Create a result string variable
-        String response = "[";
+        StringBuilder response = new StringBuilder("[");
         SimplyLinkedListNode<list_t> currentNode = this.head;
 
         // Loop through every node in the list and store its data to the result string
         while (currentNode != null)
         {
-            response = response.concat(currentNode.getData().toString());
+            response.append(currentNode.getData().toString());
             if (currentNode.getNextNode() != null) {
-                response += SimplyLinkedList.DEFAULT_SEPERATOR;
+                response.append(SimplyLinkedList.DEFAULT_SEPERATOR);
             }
             currentNode = currentNode.getNextNode();
         }
-        response += "]";
+        response.append("]");
 
-        return response;
+        return response.toString();
     }
 
     /**
@@ -358,15 +359,19 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * @param args some arguments for command line executions
      * @author Antonis Zikas
      */
-    public static void main(String[] args) {
-        SimplyLinkedList<Integer> list = new SimplyLinkedList<>();
+    public static void main(String[] args) 
+    {
+        SimplyLinkedList<String> innerList = new SimplyLinkedList<>();
+        SimplyLinkedList<SimplyLinkedList<String>> outerList = new SimplyLinkedList<>();
 
-        for (int i = 0; i < 20; i++) {
-            list.insertDataAtEnd(i + 1);
+        for (int i = 0; i < 5; i++) {
+            innerList.insertDataAtEnd("Inner Data");
         }
 
-        for (Integer item : list) {
-            System.out.print(item + ", ");
+        for (int i = 0; i < 3; i++) {
+            outerList.insertDataAtEnd(innerList);
         }
+
+        System.out.println(outerList);
     }
 }
