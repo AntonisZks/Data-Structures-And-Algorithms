@@ -364,7 +364,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         SimplyLinkedList<String> innerList = new SimplyLinkedList<>();
         SimplyLinkedList<SimplyLinkedList<String>> outerList = new SimplyLinkedList<>();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             innerList.insertDataAtEnd("Inner Data");
         }
 
