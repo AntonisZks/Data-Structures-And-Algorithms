@@ -1,4 +1,4 @@
-package DataStructures.Graphs.Unweighted.Undirected;
+package DataStructures.Graphs;
 
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
@@ -7,17 +7,17 @@ import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
  * Supporting class to define the node list type
  * @author Antonis Zikas
  */
-class NodeList<node_t> extends SimplyLinkedList<UnweightedUndirectedGraphNode<node_t>>
+class NodeList<node_t> extends SimplyLinkedList<GraphNode<node_t>>
 {
     /**
      * Returns the graph node that containing the given data
      * @param data the data to find the node containing it
      * @return the graph that contains the given data, null if not found
      */
-    public UnweightedUndirectedGraphNode<node_t> getNodeOfData(node_t data)
+    public GraphNode<node_t> getNodeOfData(node_t data)
     {
         // Initialize a current list node and set it to be the first node in the neighbors list
-        SimplyLinkedListNode<UnweightedUndirectedGraphNode<node_t>> currentNode = this.head;
+        SimplyLinkedListNode<GraphNode<node_t>> currentNode = this.head;
 
         // Loop through every node in the neighbor list to find the node containing the given data
         while (currentNode != null) 
@@ -38,17 +38,44 @@ class NodeList<node_t> extends SimplyLinkedList<UnweightedUndirectedGraphNode<no
  * @author Antonis Zikas
  * @since 24/02/2024
  */
-public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedGraphMethods<graph_t>
+public class Graph<graph_t> implements GraphMethods<graph_t>
 {
+    // Enumerations to define the direction and weight modes of the graph
+    public static enum DirectionMode { DIRECTED, UNDIRECTED }
+    public static enum WeightMode    { WEIGHTED, UNWEIGHTED }
+
     private final NodeList<graph_t> nodes;
     private int numberOfNodes;
 
+    private DirectionMode directionMode;
+    private WeightMode weightMode;
+
     /**
-     * Constructor of the unweighted undirected graph
+     * Default Constructor of the unweighted undirected graph
      */
-    public UnweightedUndirectedGraph() {
+    public Graph() 
+    {
         this.nodes = new NodeList<>();
         this.numberOfNodes = 0;
+
+        // Set the default mode of the graph (unweighted and undirected)
+        this.directionMode = DirectionMode.UNDIRECTED;
+        this.weightMode = WeightMode.UNWEIGHTED;
+    }
+
+    /**
+     * Complex Constructor of the graph
+     * @param directionMode the mode of the graph, whether it is directed or undirected
+     * @param weightMode the mode of the graph, whether it is weighted or unweighted
+     */
+    public Graph(DirectionMode directionMode, WeightMode weightMode)
+    {
+        this.nodes = new NodeList<>();
+        this.numberOfNodes = 0;
+
+        // Set the mode of the graph according to the inputs
+        this.directionMode = directionMode;
+        this.weightMode = weightMode;
     }
 
     /**
@@ -59,10 +86,13 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
     public boolean addNode(graph_t data)
     {
         // Create a new node with the given data and add it to the graph
-        UnweightedUndirectedGraphNode<graph_t> newNode = new UnweightedUndirectedGraphNode<>(data, null);
+        GraphNode<graph_t> newNode = new GraphNode<>(data, null);
+        if (this.weightMode == Graph.WeightMode.WEIGHTED) {
+            newNode.setConnectionMode(GraphNode.ConnectionMode.WEIGHTED);
+        }
         
         // Checking if the node already exists in the graph
-        for (UnweightedUndirectedGraphNode<graph_t> currentNode : this.nodes) {
+        for (GraphNode<graph_t> currentNode : this.nodes) {
         	if (currentNode.getData() == data) {
         		return false;
         	}
@@ -87,10 +117,10 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
         StringBuilder response = new StringBuilder();
 
         // Loop through every node in the graph and store its neighbors to the result string
-        for (UnweightedUndirectedGraphNode<graph_t> currentNode : this.nodes)
+        for (GraphNode<graph_t> currentNode : this.nodes)
         {
             response.append(currentNode.getData()).append(": ");
-            response.append(currentNode.getNeighbors().toString()).append("\n");
+            response.append(currentNode.getEdges().toString()).append("\n");
         }
 
         return response.toString();
@@ -106,7 +136,7 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
     public boolean connectNodes(graph_t data1, graph_t data2)
     {
         // Initialize the two nodes to connect
-        UnweightedUndirectedGraphNode<graph_t> node1, node2;
+        GraphNode<graph_t> node1, node2;
 
         // Check if there are such nodes that contain the given data
         if ((node1 = this.nodes.getNodeOfData(data1)) == null || (node2 = this.nodes.getNodeOfData(data2)) == null) {
@@ -124,9 +154,52 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
         	return true;
         }
 
-        // Connect the two nodes by adding each one as a neighbor to the other
-        node1.addNeighbor(node2);
-        node2.addNeighbor(node1);
+        // Connect the two nodes according to the graph's direction mode
+        if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
+            node1.addNeighbor(node2);
+            node2.addNeighbor(node1);
+        } else {
+            node1.addNeighbor(node2);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean connectNodes(graph_t data1, graph_t data2, double weight)
+    {
+        // Checking if the graph is weighted
+        if (this.weightMode == Graph.WeightMode.UNWEIGHTED) {
+            System.err.println("The Graph is unweighted. Try to connect nodes without weights");
+            return false;
+        }
+
+        // Initialize the two nodes to connect
+        GraphNode<graph_t> node1, node2;
+
+        // Check if there are such nodes that contain the given data
+        if ((node1 = this.nodes.getNodeOfData(data1)) == null || (node2 = this.nodes.getNodeOfData(data2)) == null) {
+            return false;
+        }
+
+        // Check if the two nodes are already connected
+        if (this.areConnected(data1, data2)) {
+            return false;
+        }
+        
+        // Checking if the two data are equal. If so, add only to the first node
+        if (data1 == data2) {
+        	node1.addNeighbor(node2, weight);
+        	return true;
+        }
+
+        // Connect the two nodes according to the graph's direction mode
+        if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
+            node1.addNeighbor(node2, weight);
+            node2.addNeighbor(node1, weight);
+        } else {
+            node1.addNeighbor(node2, weight);
+        }
 
         return true;
     }
@@ -141,19 +214,19 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
     public boolean disconnectNodes(graph_t data1, graph_t data2)
     {
         // Initialize the two nodes to disconnect
-        UnweightedUndirectedGraphNode<graph_t> node1, node2;
+        GraphNode<graph_t> node1, node2;
 
         // Check if there are suck nodes with the given data
         if ((node1 = this.nodes.getNodeOfData(data1)) == null || (node2 = this.nodes.getNodeOfData(data2)) == null) {
             return false;
         }
 
-        // Disconnect the nodes by removing each one from each other's neighbors
-        if (!node1.removeNeighbor(node2) || !node2.removeNeighbor(node1)) {
-            return false;
+        // Disconnect the nodes according to the graph direction mode
+        if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
+            return node1.removeNeighbor(node2) && node2.removeNeighbor(node1);
+        } else {
+            return node1.removeNeighbor(node2);
         }
-        
-        return true;
     }
     
     /**
@@ -166,7 +239,7 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
     public boolean areConnected(graph_t data1, graph_t data2)
     {
     	// Initialize the two nodes to check if they are connected
-    	UnweightedUndirectedGraphNode<graph_t> node1, node2;
+    	GraphNode<graph_t> node1, node2;
     	
     	// Check if there are such nodes with the given data
     	if ((node1 = this.nodes.getNodeOfData(data1)) == null || (node2 = this.nodes.getNodeOfData(data2)) == null) {
@@ -184,21 +257,14 @@ public class UnweightedUndirectedGraph<graph_t> implements UnweightedUndirectedG
      */
     public static void main(String[] args)
     {
-        UnweightedUndirectedGraph<Integer> graph = new UnweightedUndirectedGraph<>();
+        Graph<Integer> graph = new Graph<>(Graph.DirectionMode.DIRECTED, Graph.WeightMode.WEIGHTED);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             graph.addNode(i + 1);
         }
 
-        graph.connectNodes(1, 2);
-        graph.connectNodes(2, 3);
-        graph.connectNodes(5, 1);
-        graph.connectNodes(2, 4);
-        graph.connectNodes(4, 2);
-        
-        graph.addNode(11);
-        
-        graph.connectNodes(11,  11);
+        graph.connectNodes(1, 2, 5);
+        graph.connectNodes(2, 1, 10);
 
         System.out.println(graph);
     }

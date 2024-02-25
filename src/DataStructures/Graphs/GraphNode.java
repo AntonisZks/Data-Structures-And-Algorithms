@@ -1,6 +1,5 @@
-package DataStructures.Graphs.Unweighted.Undirected;
+package DataStructures.Graphs;
 
-import DataStructures.Graphs.Unweighted.UnweightedGraphEdge;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
 
@@ -8,17 +7,17 @@ import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
  * Supporting class to define the edge list type
  * @author Antonis Zikas
  */
-class EdgeList<node_t> extends SimplyLinkedList<UnweightedGraphEdge<node_t>> 
+class EdgeList<node_t> extends SimplyLinkedList<GraphEdge<node_t>> 
 {
     /**
      * Removes an edge with an endNode containing the given data
      * @param data the data to remove
      * @return true if the deletion was successful, false otherwise
      */
-    public boolean removeEdgeWithEndNodeData(node_t data)
+    public boolean removeEdgeWithEndNodeData(GraphNode<node_t> node)
     {
         // Initialize a current node to iterate through the edges list
-        SimplyLinkedListNode<UnweightedGraphEdge<node_t>> currentNode = this.head, previousNode = this.head;
+        SimplyLinkedListNode<GraphEdge<node_t>> currentNode = this.head, previousNode = this.head;
         
         // Checking if the list is empty
         if (this.head == null) {
@@ -26,7 +25,7 @@ class EdgeList<node_t> extends SimplyLinkedList<UnweightedGraphEdge<node_t>>
         }
         
         // Check if the given data is in the first node
-        if (this.head.getData().getEndNode().getData() == data) {
+        if (this.head.getData().getEndNode().equals(node)) {
             this.head = this.head.getNextNode();
             return true;
         }
@@ -34,10 +33,10 @@ class EdgeList<node_t> extends SimplyLinkedList<UnweightedGraphEdge<node_t>>
         // Otherwise loop through the edges and find the node containing the given data
         while (currentNode != null) 
         {
-            node_t currentData = currentNode.getData().getEndNode().getData();
+            GraphNode<node_t> currentEndNode = currentNode.getData().getEndNode();
             
             // Check if the current data is equal to the given data
-            if (currentData == data) {
+            if (currentEndNode.equals(node)) {
                 previousNode.setNextNode(currentNode.getNextNode());
                 return true;
             }
@@ -47,22 +46,52 @@ class EdgeList<node_t> extends SimplyLinkedList<UnweightedGraphEdge<node_t>>
         }
         return false;
     }
+
+    @Override
+    public final String toString()
+    {
+        SimplyLinkedListNode<GraphEdge<node_t>> currentNode = this.head;
+        StringBuilder response = new StringBuilder();
+
+        while (currentNode != null)
+        {
+            response.append("(").append(currentNode.getData().getEndNode().toString());
+            
+            if (currentNode.getData().getEndNode().connectionMode == GraphNode.ConnectionMode.WEIGHTED) {
+                response.append(", ").append(currentNode.getData().getWeight());
+            }
+
+            response.append(")");
+
+            if (currentNode.getNextNode() != null) {
+                response.append(", ");
+            }
+            
+            currentNode = currentNode.getNextNode();
+        }
+
+        return response.toString();
+    }
 }
 
 /**
  * Supporting class to define the neighbor list type
  * @author Antonis Zikas
  */
-class NeighborList<node_t> extends SimplyLinkedList<UnweightedUndirectedGraphNode<node_t>> {}
+class NeighborList<node_t> extends SimplyLinkedList<GraphNode<node_t>> {}
 
 /**
  * A class that represents an undirected unweighted graph node.
  * @author Antonis Zikas
  */
-public class UnweightedUndirectedGraphNode<node_t>
+public class GraphNode<node_t>
 {
+    // Enumeration to define the connection with other nodes (with or without weights)
+    public static enum ConnectionMode { WEIGHTED, UNWEIGHTED }
+
     private node_t data;
     private EdgeList<node_t> edges;
+    public ConnectionMode connectionMode;
 
     /**
      * Returns the neighbors of this node
@@ -74,9 +103,9 @@ public class UnweightedUndirectedGraphNode<node_t>
         NeighborList<node_t> neighbors = new NeighborList<>();
         
         // Loop through the edges of the node and store every end node as a neighbor of this node
-        for (UnweightedGraphEdge<node_t> currentEdge : this.edges) 
+        for (GraphEdge<node_t> currentEdge : this.edges) 
         {
-            UnweightedUndirectedGraphNode<node_t> currentEndNode = currentEdge.getEndNode();
+            GraphNode<node_t> currentEndNode = currentEdge.getEndNode();
             neighbors.insertDataAtEnd(currentEndNode);
         }
 
@@ -87,10 +116,17 @@ public class UnweightedUndirectedGraphNode<node_t>
      * Adds a new edge to this node with the given end node. Basically it connects those two nodes
      * @param otherNode the node to add to the new edge
      */
-    public void addNeighbor(UnweightedUndirectedGraphNode<node_t> otherNode)
+    public void addNeighbor(GraphNode<node_t> otherNode)
     {
         // Initialize a new edge with the given end node, and add it to the edge list of this node
-        UnweightedGraphEdge<node_t> newEdge = new UnweightedGraphEdge<>(otherNode);
+        GraphEdge<node_t> newEdge = new GraphEdge<>(otherNode, 0.0f);
+        this.edges.insertDataAtEnd(newEdge);
+    }
+
+    public void addNeighbor(GraphNode<node_t> otherNode, double weight)
+    {
+        // Initialize a new edge with the given end node, and add it to the edge list of this node
+        GraphEdge<node_t> newEdge = new GraphEdge<>(otherNode, weight);
         this.edges.insertDataAtEnd(newEdge);
     }
     
@@ -99,10 +135,8 @@ public class UnweightedUndirectedGraphNode<node_t>
      * @param otherNode the node to remove from this node's neighbors
      * @return true if the deletion was successful, false otherwise
      */
-    public boolean removeNeighbor(UnweightedUndirectedGraphNode<node_t> otherNode)
-    {   
-        node_t dataToRemove = otherNode.getData();
-        return this.edges.removeEdgeWithEndNodeData(dataToRemove);
+    public boolean removeNeighbor(GraphNode<node_t> otherNode) {   
+        return this.edges.removeEdgeWithEndNodeData(otherNode);
     }
     
     /**
@@ -110,11 +144,11 @@ public class UnweightedUndirectedGraphNode<node_t>
      * @param otherNode the node to check is it is a neighbor of this one
      * @return true if the given node is a neighbor, false otherwise
      */
-    public boolean hasNeighbor(UnweightedUndirectedGraphNode<node_t> otherNode)
+    public boolean hasNeighbor(GraphNode<node_t> otherNode)
     {
     	// Loop through every edge this node has and search if it has the given node as a neighbor
-    	for (UnweightedGraphEdge<node_t> currentEdge : this.edges) {
-    		if (otherNode.getData() == currentEdge.getEndNode().getData()) {
+    	for (GraphEdge<node_t> currentEdge : this.edges) {
+    		if (currentEdge.getEndNode().equals(otherNode)) {
     			return true;
     		}
     	}
@@ -135,16 +169,16 @@ public class UnweightedUndirectedGraphNode<node_t>
      * @param data the data of the node
      * @param edges the edges of this node
      */
-    public UnweightedUndirectedGraphNode(node_t data, EdgeList<node_t> edges) {
+    public GraphNode(node_t data, EdgeList<node_t> edges) {
         this.data = data;
         this.edges = (edges == null) ? new EdgeList<>() : edges;
+        this.connectionMode = GraphNode.ConnectionMode.UNWEIGHTED;
     }
 
     /**
      * Sets the data of this node
      * @param data the data to be set
      */
-    @SuppressWarnings("unused")
     public void setData(node_t data) {
         this.data = data;
     }
@@ -153,9 +187,16 @@ public class UnweightedUndirectedGraphNode<node_t>
      * Sets the neighbors of this node
      * @param edges the list of edges to be set
      */
-    @SuppressWarnings("unused")
     public void setNeighbors(EdgeList<node_t> edges) {
         this.edges = edges;
+    }
+
+    /**
+     * Sets the connection mode if the graph node
+     * @param connectionMode the mode of connection (weighted or unweighted)
+     */
+    public void setConnectionMode(GraphNode.ConnectionMode connectionMode) {
+        this.connectionMode = connectionMode;
     }
 
     /**
@@ -170,8 +211,43 @@ public class UnweightedUndirectedGraphNode<node_t>
      * Returns the neighbors of this node
      * @return a list of edges of this node
      */
-    @SuppressWarnings("unused")
     public EdgeList<node_t> getEdges() {
         return this.edges;
+    }
+
+    /**
+     * Overloading method for equality check between two unweighted undirected graph nodes
+     * @param other the other object to check
+     * @return true, if they have the same data, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        // Check if we are comparing the same objects using reference equality
+        if (this == other) {
+            return true;
+        }
+
+        // Check if the other object is null or of a different class
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        // Cast the other object to UnweightedUndirectedGraphNode
+        @SuppressWarnings("unchecked")
+        GraphNode<node_t> otherNode = (GraphNode<node_t>) other;
+
+        // Compare the data fields of the two nodes using the == operator
+        return this.data == otherNode.data;
+    }
+
+    /**
+     * Main function to check node functionality
+     * @param args some arguments for command line executions
+     */
+    public static void main(String[] args) {
+        GraphNode<Integer> node1 = new GraphNode<>(1, null);
+        GraphNode<Integer> node2 = new GraphNode<>(1, null);
+    
+        System.out.println(node1.equals(node2)); // true
     }
 }

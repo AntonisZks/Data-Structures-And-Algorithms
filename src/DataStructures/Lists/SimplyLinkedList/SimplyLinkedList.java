@@ -228,7 +228,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      * @return the list as a string
      */
     @Override
-    public final String toString()
+    public String toString()
     {
         // Create a result string variable
         StringBuilder response = new StringBuilder("[");
