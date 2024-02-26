@@ -1,4 +1,4 @@
-package DataStructures.Graphs;
+package DataStructures.Graphs.AdjacencyListGraph;
 
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;

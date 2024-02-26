@@ -1,4 +1,4 @@
-package DataStructures.Graphs;
+package DataStructures.Graphs.AdjacencyListGraph;
 
 /**
  * Public interface for the unweighted undirected graph's methods

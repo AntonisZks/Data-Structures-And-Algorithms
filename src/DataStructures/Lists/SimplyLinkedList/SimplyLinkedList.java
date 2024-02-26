@@ -156,6 +156,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
 
     /**
      * Removes and returns the data from the beginning of the simply linked list
+     * @return the first item in the list, null otherwise
      */
     @Override
     public final list_t removeDataFromStart()
@@ -361,17 +362,13 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
      */
     public static void main(String[] args) 
     {
-        SimplyLinkedList<String> innerList = new SimplyLinkedList<>();
-        SimplyLinkedList<SimplyLinkedList<String>> outerList = new SimplyLinkedList<>();
+        SimplyLinkedList<Integer> list = new SimplyLinkedList<>();
 
-        for (int i = 0; i < 2; i++) {
-            innerList.insertDataAtEnd("Inner Data");
+        //list.insertDataAtEnd(1);
+        //list.insertDataAtEnd(2);
+        
+        for (Integer data : list) {
+            System.out.println(data);
         }
-
-        for (int i = 0; i < 3; i++) {
-            outerList.insertDataAtEnd(innerList);
-        }
-
-        System.out.println(outerList);
     }
 }

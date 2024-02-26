@@ -1,4 +1,4 @@
-package DataStructures.Graphs;
+package DataStructures.Graphs.AdjacencyListGraph;
 
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
@@ -158,6 +158,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
         if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
             node1.addNeighbor(node2);
             node2.addNeighbor(node1);
+            
         } else {
             node1.addNeighbor(node2);
         }
@@ -197,6 +198,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
         if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
             node1.addNeighbor(node2, weight);
             node2.addNeighbor(node1, weight);
+            
         } else {
             node1.addNeighbor(node2, weight);
         }
@@ -224,6 +226,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
         // Disconnect the nodes according to the graph direction mode
         if (this.directionMode == Graph.DirectionMode.UNDIRECTED) {
             return node1.removeNeighbor(node2) && node2.removeNeighbor(node1);
+            
         } else {
             return node1.removeNeighbor(node2);
         }
@@ -257,15 +260,19 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
      */
     public static void main(String[] args)
     {
-        Graph<Integer> graph = new Graph<>(Graph.DirectionMode.DIRECTED, Graph.WeightMode.WEIGHTED);
+        Graph<Integer> graph = new Graph<>(Graph.DirectionMode.UNDIRECTED, Graph.WeightMode.WEIGHTED);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             graph.addNode(i + 1);
         }
 
-        graph.connectNodes(1, 2, 5);
-        graph.connectNodes(2, 1, 10);
-
+        graph.connectNodes(1, 2, 5.92);
+        graph.connectNodes(2, 1, 10.43);
+        graph.connectNodes(3,  9, 2.02);
+        graph.connectNodes(4,  2, 1.94);
+        graph.connectNodes(5,  1, 9.83);
+        graph.connectNodes(5,  6, 2.01);
+        
         System.out.println(graph);
     }
 }

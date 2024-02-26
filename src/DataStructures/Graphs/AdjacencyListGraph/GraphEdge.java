@@ -1,4 +1,4 @@
-package DataStructures.Graphs;
+package DataStructures.Graphs.AdjacencyListGraph;
 
 /**
  * A class that represents an unweighted graph edge
