@@ -21,6 +21,7 @@ public interface SimplyLinkedListMethods<list_t>
     /* Other Methods */
     boolean contains(list_t data);
     int indexOf(list_t data);
+    SimplyLinkedList<list_t> getReveresedVersion();
 
     /* Printing Methods */
     void print(String seperator);

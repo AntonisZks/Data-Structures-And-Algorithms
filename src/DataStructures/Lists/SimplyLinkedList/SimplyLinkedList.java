@@ -317,7 +317,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
 
         // Search for the given data in the list and if found return its index
         while (currentNode != null) {
-            if (currentNode.getData() == data) {
+            if (currentNode.getData().equals(data)) {
                 return indexCounter;
             }
             currentNode = currentNode.getNextNode();
@@ -353,6 +353,26 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
                 return dataToReturn;
             }
         };
+    }
+
+    /**
+     * Returns the same list but reversed
+     * @return the reversed version of this list
+     */
+    @Override
+    public SimplyLinkedList<list_t> getReveresedVersion()
+    {
+        // Initialize a new simply linked list and a current node to iterate
+        SimplyLinkedList<list_t> resultList = new SimplyLinkedList<>();
+        SimplyLinkedListNode<list_t> currentNode = this.head;
+
+        // Loop through every node in the list and add it in the beggining of the reversed one
+        while (currentNode != null) {
+            resultList.insertDataAtStart(currentNode.getData());
+            currentNode = currentNode.getNextNode();
+        }
+
+        return resultList;
     }
 
     /**

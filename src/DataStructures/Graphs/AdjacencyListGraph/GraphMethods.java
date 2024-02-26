@@ -12,4 +12,8 @@ public interface GraphMethods<graph_t>
     boolean connectNodes(graph_t data1, graph_t data2, double weight);
     boolean disconnectNodes(graph_t data1, graph_t data2);
     boolean areConnected(graph_t data1, graph_t data2);
+
+    /* Other Methods */
+    GraphNode<graph_t> getNodeOfData(graph_t data);
+    int getNodeIndex(GraphNode<graph_t> node);
 }

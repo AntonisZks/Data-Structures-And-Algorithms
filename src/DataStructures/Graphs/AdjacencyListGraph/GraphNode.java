@@ -97,7 +97,7 @@ public class GraphNode<node_t>
      * Returns the neighbors of this node
      * @return a list containing the nodes that are neighbors to this one
      */
-    public NeighborList<node_t> getNeighbors() // TODO: Store every neighbor in a list whenever addNeighbor() method is called
+    public SimplyLinkedList<GraphNode<node_t>> getNeighbors() // TODO: Store every neighbor in a list whenever addNeighbor() method is called
     {
         // Initialize a new list for the neighbors
         NeighborList<node_t> neighbors = new NeighborList<>();

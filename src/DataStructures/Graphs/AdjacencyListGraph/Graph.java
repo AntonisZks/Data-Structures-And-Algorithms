@@ -79,6 +79,28 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
     }
 
     /**
+     * Returns the graph node containing the given data
+     * @return the node in the graph that contains the given data
+     */
+    @Override
+    public GraphNode<graph_t> getNodeOfData(graph_t data) {
+        return this.nodes.getNodeOfData(data);
+    }
+
+    /**
+     * Returns the index of the given node data in the grqph
+     * @return the index of the data in the graph
+     */
+    @Override
+    public int getNodeIndex(GraphNode<graph_t> node) {
+        return this.nodes.indexOf(node);
+    }
+
+    public int getSize() {
+        return this.numberOfNodes;
+    }
+
+    /**
      * Adds a new node to this graph with the given data and no neighbors
      * @param data the data to be inserted
      */
@@ -272,7 +294,13 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
         graph.connectNodes(4,  2, 1.94);
         graph.connectNodes(5,  1, 9.83);
         graph.connectNodes(5,  6, 2.01);
-        
+
         System.out.println(graph);
+        
+        for (GraphNode<Integer> node : graph.getNodeOfData(1).getNeighbors()) {
+            System.out.println(node);
+        }
+
+        System.out.println("Index: " + graph.getNodeIndex(graph.getNodeOfData(5)));
     }
 }
