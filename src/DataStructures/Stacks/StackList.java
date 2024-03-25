@@ -1,39 +1,39 @@
-package DataStructures.Queues;
+package DataStructures.Stacks;
 
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 
 /**
- * Public interface for the queue list methods
+ * Public interface for the stack list methods
  */
-interface QueueListMethods<queue_t>
+interface StackListMethods<stack_t>
 {
     int getSize();
 
-    boolean enqueue(queue_t data);
-    queue_t dequeue();
+    boolean push(stack_t data);
+    stack_t pop();
 }
 
 /**
- * A class that represents a queue data structure that uses a simply linked list.
+ * A class that represents a stack data structure that uses a simply linked list.
  * @author Antonis Zikas
- * @since 26/02/2024
+ * @since 25/03/2024
  */
-public class QueueList<queue_t> implements QueueListMethods<queue_t>
+public class StackList<stack_t> implements StackListMethods<stack_t>
 {
     private int size;
-    private SimplyLinkedList<queue_t> list;
+    private SimplyLinkedList<stack_t> list;
 
     /**
-     * Constructor of the queuelist
+     * Constructor of the stacklist
      */
-    public QueueList() {
+    public StackList() {
         this.size = 0;
         this.list = new SimplyLinkedList<>();
     }
 
     /**
-     * Returns the size of the queuelist
-     * @return how many elements the queuelist has
+     * Returns the size of the stacklist
+     * @return how many elements the stacklist has
      */
     @Override
     public int getSize() {
@@ -41,31 +41,30 @@ public class QueueList<queue_t> implements QueueListMethods<queue_t>
     }
 
     /**
-     * Inserts new data to the end of the queue
+     * Inserts new data to the end of the stack
      * @param data the data to insert
      * @return true if the insertion was successfull, false otherwise
      */
     @Override
-    public boolean enqueue(queue_t data)
+    public boolean push(stack_t data)
     {
         // Insert the data at the end of the list
         if (this.list.insertDataAtEnd(data)) {
             this.size++;
             return true;
-        }
+        } 
         return false;
     }
 
     /**
-     * Removes and returns the data at the beginning of the queuelist
-     * @return the first item of the queuelist, null otherwise
+     * Removes and returns the data at the beginning of the stacklist
+     * @return the first item of the stacklist, null otherwise
      */
     @Override
-    public queue_t dequeue()
-    {
-        // Remove the first item in the list and return it
-        queue_t dataToReturn;
-        if ((dataToReturn = this.list.removeDataFromStart()) != null) {
+    public stack_t pop() {
+        // Remove the last item in the list and return it
+        stack_t dataToReturn;
+        if ((dataToReturn = this.list.removeDataFromEnd()) != null) {
             this.size--;
             return dataToReturn;
         }
@@ -73,8 +72,8 @@ public class QueueList<queue_t> implements QueueListMethods<queue_t>
     }
 
     /**
-     * Overloading method for printing the queuelist object
-     * @return the queuelist as a string
+     * Overloading method for printing the stacklist object
+     * @return the stacklist as a string
      */
     @Override
     public String toString()
@@ -88,7 +87,7 @@ public class QueueList<queue_t> implements QueueListMethods<queue_t>
         }
 
         // Loop through every itam in the queue list and store its data to the result string
-        for (queue_t data : this.list) {
+        for (stack_t data : this.list) {
             response.append(data).append(", ");
         }
 
@@ -97,22 +96,22 @@ public class QueueList<queue_t> implements QueueListMethods<queue_t>
     }
 
     /**
-     * Main function to test the queuelist
+     * Main function to test the stacklist
      * @param args some arguments for command line executions
      */
     public static void main(String[] args) 
     {
-        QueueList<Integer> queue = new QueueList<>();
+        StackList<Integer> queue = new StackList<>();
 
         for (int i = 0; i < 5; i++) {
-            queue.enqueue(i + 1);
+            queue.push(i + 1);
         }
 
         System.out.println(queue);
-        System.out.println("Data removed is " + queue.dequeue());
-        System.out.println("Data removed is " + queue.dequeue());
+        System.out.println("Data removed is " + queue.pop());
+        System.out.println("Data removed is " + queue.pop());
         System.out.println(queue);
-        queue.enqueue(11);
+        queue.push(11);
         System.out.println(queue);
     }
 }

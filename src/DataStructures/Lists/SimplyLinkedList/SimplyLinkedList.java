@@ -5,6 +5,32 @@ package DataStructures.Lists.SimplyLinkedList;
 import java.util.Iterator;
 
 /**
+ * Public Interface for the simply linked list's methods
+ * @author Antonis Zikas
+ */
+interface SimplyLinkedListMethods<list_t>
+{
+    /* Inserting Methods */
+    boolean insertDataAtEnd(list_t data);
+    boolean insertDataAtStart(list_t data);
+    boolean insertDataAtIndex(list_t data, int index);
+
+    /* Removing Methods */
+    list_t removeDataFromEnd();
+    list_t removeDataFromStart();
+    list_t removeDataFromIndex(int index);
+
+    /* Other Methods */
+    boolean contains(list_t data);
+    int indexOf(list_t data);
+    SimplyLinkedList<list_t> getReveresedVersion();
+
+    /* Printing Methods */
+    void print(String seperator);
+    void print();
+}
+
+/**
  * A class that represents a simply linked list data structure
  * @author Antonis Zikas
  * @since 24/02/2024
@@ -334,8 +360,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     public Iterator<list_t> iterator()
     {
         // Construct a new iterator object and return it
-        return new Iterator<list_t>() 
-        {
+        return new Iterator<>() {
             private SimplyLinkedListNode<list_t> currentNode = head;
 
             @Override
@@ -344,12 +369,11 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
             }
 
             @Override
-            public list_t next() 
-            {
+            public list_t next() {
                 // Return the data of the current node, and set it to the next one
                 list_t dataToReturn = currentNode.getData();
                 currentNode = currentNode.getNextNode();
-                
+
                 return dataToReturn;
             }
         };
@@ -366,7 +390,7 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
         SimplyLinkedList<list_t> resultList = new SimplyLinkedList<>();
         SimplyLinkedListNode<list_t> currentNode = this.head;
 
-        // Loop through every node in the list and add it in the beggining of the reversed one
+        // Loop through every node in the list and add it in the beginning of the reversed one
         while (currentNode != null) {
             resultList.insertDataAtStart(currentNode.getData());
             currentNode = currentNode.getNextNode();
@@ -384,9 +408,6 @@ public class SimplyLinkedList<list_t> implements SimplyLinkedListMethods<list_t>
     {
         SimplyLinkedList<Integer> list = new SimplyLinkedList<>();
 
-        //list.insertDataAtEnd(1);
-        //list.insertDataAtEnd(2);
-        
         for (Integer data : list) {
             System.out.println(data);
         }

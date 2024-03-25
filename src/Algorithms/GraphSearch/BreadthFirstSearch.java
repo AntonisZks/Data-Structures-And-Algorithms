@@ -8,8 +8,9 @@ import DataStructures.Queues.QueueList;
 /**
  * Abstract class that represents the Breadth First Search Algorithm
  * @author Antonis Zikas
+ * @since 26/02/2024
  */
-public abstract class BreadthFirstSearchAlgorithm
+public abstract class BreadthFirstSearch
 {
     /**
      * Solves the BFS algorithm and returns the search path pf the algorithm execution
@@ -18,10 +19,10 @@ public abstract class BreadthFirstSearchAlgorithm
      * @param visitedNodes the supported list data structure
      * @return the search path of the process
      */
-    private static <graph_t> SimplyLinkedList<GraphNode<graph_t>> 
-        solveForSearchPath(QueueList<GraphNode<graph_t>> queue, SimplyLinkedList<GraphNode<graph_t>> visitedNodes) 
+    private static <graph_t> SimplyLinkedList<GraphNode<graph_t>> solveForSearchPath(
+        QueueList<GraphNode<graph_t>> queue, SimplyLinkedList<GraphNode<graph_t>> visitedNodes) 
     {
-        SimplyLinkedList<GraphNode<graph_t>> searchPath = new SimplyLinkedList<>(); // Create list to store the search path of the search process
+        SimplyLinkedList<GraphNode<graph_t>> searchPath = new SimplyLinkedList<>(); // Create list to store the path of the search process
 
         // BFS execution
         while (queue.getSize() != 0)
@@ -34,9 +35,7 @@ public abstract class BreadthFirstSearchAlgorithm
                 if (!visitedNodes.contains(node)) {
                     visitedNodes.insertDataAtEnd(node);
                     queue.enqueue(node);
-                }
-            }
-        }
+        }}}
 
         return searchPath; // Return the search path after the search process
     }
@@ -48,8 +47,8 @@ public abstract class BreadthFirstSearchAlgorithm
      * @param queue the supporting queue data structure
      * @param visitedNodes the supported list data structure
      */
-    private static <graph_t> void
-        solveForShortestPath(Graph<graph_t> graph, QueueList<GraphNode<graph_t>> queue, SimplyLinkedList<GraphNode<graph_t>> visitedNodes, GraphNode<graph_t>[] previousNode) 
+    private static <graph_t> void solveForShortestPath(
+        Graph<graph_t> graph, QueueList<GraphNode<graph_t>> queue, SimplyLinkedList<GraphNode<graph_t>> visitedNodes, GraphNode<graph_t>[] previousNode)
     {
         // BFS execution
         while (queue.getSize() != 0)
@@ -63,9 +62,7 @@ public abstract class BreadthFirstSearchAlgorithm
                     visitedNodes.insertDataAtEnd(node);
                     queue.enqueue(node);
                     previousNode[graph.getNodeIndex(node)] = currentNode; // Keep every the parent of every node
-                }
-            }
-        }
+        }}}
     }
 
     /**
@@ -73,6 +70,7 @@ public abstract class BreadthFirstSearchAlgorithm
      * @param <graph_t> data type of the graph
      * @param graph the graph to search
      * @param data the node's data to start searching
+     * @return the search path of the process
      */
     public static <graph_t> SimplyLinkedList<GraphNode<graph_t>> searchGraph(Graph<graph_t> graph, graph_t data)
     {
@@ -88,9 +86,7 @@ public abstract class BreadthFirstSearchAlgorithm
         queue.enqueue(startingNode);
 
         // Execute the search process and print each node visited
-        SimplyLinkedList<GraphNode<graph_t>> searchPath = BreadthFirstSearchAlgorithm.solveForSearchPath(queue, visitedNodes);
-
-        return searchPath;
+        return BreadthFirstSearch.solveForSearchPath(queue, visitedNodes);
     }
 
     /**
@@ -123,7 +119,7 @@ public abstract class BreadthFirstSearchAlgorithm
         }
 
         // Solve the search by searching for shortest path
-        BreadthFirstSearchAlgorithm.solveForShortestPath(graph, queue, visitedNodes, previousNode);
+        BreadthFirstSearch.solveForShortestPath(graph, queue, visitedNodes, previousNode);
 
         // Construct the shortest path
         SimplyLinkedList<GraphNode<graph_t>> shortestPath = new SimplyLinkedList<>();
@@ -152,20 +148,20 @@ public abstract class BreadthFirstSearchAlgorithm
 
         graph.connectNodes(1, 2);
         graph.connectNodes(1, 3);
-        
+
         graph.connectNodes(2, 7);
-        
+
         graph.connectNodes(3, 4);
         graph.connectNodes(3, 5);
-        
+
         graph.connectNodes(4, 5);
         graph.connectNodes(4, 6);
         graph.connectNodes(4, 7);
-        
+
         graph.connectNodes(6, 8);
-        
+
         graph.connectNodes(7, 9);
-        
+
         graph.connectNodes(8, 9);
 
         graph.disconnectNodes(3, 4);
@@ -174,7 +170,7 @@ public abstract class BreadthFirstSearchAlgorithm
         
         
         System.out.println(graph);
-        System.out.println("Graph Search Path: " + BreadthFirstSearchAlgorithm.searchGraph(graph, 1));
-        System.out.println("Shortest Path From 1 to 8: " + BreadthFirstSearchAlgorithm.shortestPathBetween(graph, 1, 8));
+        System.out.println("Graph Search Path: " + BreadthFirstSearch.searchGraph(graph, 1));
+        System.out.println("Shortest Path From 1 to 8: " + BreadthFirstSearch.shortestPathBetween(graph, 1, 8));
     }
 }

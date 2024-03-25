@@ -4,6 +4,24 @@ import DataStructures.Lists.SimplyLinkedList.SimplyLinkedList;
 import DataStructures.Lists.SimplyLinkedList.SimplyLinkedListNode;
 
 /**
+ * Public interface for the unweighted undirected graph's methods
+ * @author Antonis Zikas
+ */
+interface GraphMethods<graph_t>
+{
+    /* Basic Methods */
+    boolean addNode(graph_t data);
+    boolean connectNodes(graph_t data1, graph_t data2);
+    boolean connectNodes(graph_t data1, graph_t data2, double weight);
+    boolean disconnectNodes(graph_t data1, graph_t data2);
+    boolean areConnected(graph_t data1, graph_t data2);
+
+    /* Other Methods */
+    GraphNode<graph_t> getNodeOfData(graph_t data);
+    int getNodeIndex(GraphNode<graph_t> node);
+}
+
+/**
  * Supporting class to define the node list type
  * @author Antonis Zikas
  */
@@ -41,14 +59,14 @@ class NodeList<node_t> extends SimplyLinkedList<GraphNode<node_t>>
 public class Graph<graph_t> implements GraphMethods<graph_t>
 {
     // Enumerations to define the direction and weight modes of the graph
-    public static enum DirectionMode { DIRECTED, UNDIRECTED }
-    public static enum WeightMode    { WEIGHTED, UNWEIGHTED }
+    public enum DirectionMode { DIRECTED, UNDIRECTED }
+    public enum WeightMode    { WEIGHTED, UNWEIGHTED }
 
     private final NodeList<graph_t> nodes;
     private int numberOfNodes;
 
-    private DirectionMode directionMode;
-    private WeightMode weightMode;
+    private final DirectionMode directionMode;
+    private final WeightMode weightMode;
 
     /**
      * Default Constructor of the unweighted undirected graph
@@ -88,7 +106,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
     }
 
     /**
-     * Returns the index of the given node data in the grqph
+     * Returns the index of the given node data in the graph
      * @return the index of the data in the graph
      */
     @Override
@@ -152,7 +170,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
      * Connects two nodes in the graph according to their data
      * @param data1 the data of the first node
      * @param data2 the data of the second node
-     * @return true if the connection was succeded, false otherwise
+     * @return true if the connection was succeeded, false otherwise
      */
     @Override
     public boolean connectNodes(graph_t data1, graph_t data2)
@@ -188,6 +206,13 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
         return true;
     }
 
+    /**
+     * Connects two nodes in the graph according to their data, with the given weight
+     * @param data1 the data of the first node
+     * @param data2 the data of the second node
+     * @param weight the weight of the edge
+     * @return true if the connection was succeeded, false otherwise
+     */
     @Override
     public boolean connectNodes(graph_t data1, graph_t data2, double weight)
     {
@@ -255,7 +280,7 @@ public class Graph<graph_t> implements GraphMethods<graph_t>
     }
     
     /**
-     * Determins whether two nodes in the graph are connected, acoording to their data
+     * Determines whether two nodes in the graph are connected, according to their data
      * @param data1 the data of the first node
      * @param data2 the data of the second node
      * @return true if the two nodes are connected, false otherwise
